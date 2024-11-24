@@ -1,7 +1,7 @@
 from openai import OpenAI
 
 client = OpenAI(
-    base_url="http://localhost:8080/v1",  # Run your llamafile first, this is the port that it's running on
+    base_url="http://localhost:8887/v1",  # Run your llamafile first, this is the port that it's running on
     api_key="sk-no-key-required"
 )
 
@@ -117,6 +117,7 @@ def generate_summary(prompt_chunks):
         prev_summary = summary
         response_summaries.append(summary)
 
+    # prev_summary will also hold our final summary at the end of the loop
     return prev_summary
 
 
