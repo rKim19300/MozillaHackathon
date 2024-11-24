@@ -27,12 +27,19 @@ const HomePage = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-  // Toggle between file and URL submission modes
-  const toggleMode = () => {
+   // Toggle between file and URL submission modes
+   const toggleMode = () => {
+    // Release the Blob URL before switching modes
+    if (filePreview) {
+      URL.revokeObjectURL(filePreview); // Cleanup Blob URL when switching modes
+    }
+    
+    // Reset states and switch mode
     setIsFileMode((prevMode) => !prevMode);
     setUploadStatus(""); // Reset upload status when switching modes
-    setSelectedFile(null);
-    setUrl("");
+    setSelectedFile(null); // Clear file selection
+    setUrl(""); // Clear URL input
+    setFilePreview(null); // Clear file preview
   };
 
   
@@ -61,6 +68,8 @@ const HomePage = () => {
       } else {
         setFilePreview(null); // Clear preview for unsupported types
       }
+    } else {
+      setSelectedFile(null); // Ensure controlled state when no file is selected
     }
   };
 
@@ -108,11 +117,11 @@ const HomePage = () => {
       <Navbar />
       <div className="pt-20 min-h-screen flex items-center justify-center bg-gray-100">
         <div className="text-center p-4 bg-white rounded-lg shadow-md">
-          <h1 className="text-4xl font-bold text-zinc-500">Privacy Policies Simplified</h1>
-          <p className="text-xl">Please upload a Privacy Policy pdf or txt file that you would like summarized.</p>
+          <h1 className="text-4xl font-bold text-indigo-500">Privacy Policies Simplified</h1>
+          <p className="text-m">Please upload a Privacy Policy pdf or txt file that you would like summarized.</p>
           {/* Toggle Mode Button */}
           <button 
-            className="mt-4 p-2 bg-purple-500 text-white rounded-lg hover:bg-purple-700"
+            className="mt-4 p-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-300"
             onClick={toggleMode}
           >
             Switch to {isFileMode ? "URL Submission" : "File Upload"}
