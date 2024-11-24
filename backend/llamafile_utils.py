@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 from openai import OpenAI
 import re
 
@@ -77,14 +76,12 @@ def call_llamafile(prompt):
     return completion
 
 
-def generate_summaries(prompt_chunks):
+def generate_summary(prompt_chunks):
     response_summaries = []
     prev_summary = ""
-    final_summary = ""
 
     # will only iterate through 4*chunk_size for suitable runtime
     for prompt_chunk_index, prompt_chunk_text in list(prompt_chunks.items())[:4]:
-
         prompt = f"""Please read the following privacy policy or terms of service and summarize the key points 
         regarding the collection, use, and sharing of consumer data. Focus on the following categories:
 
@@ -121,37 +118,14 @@ def generate_summaries(prompt_chunks):
         summary = summary.rstrip('</s>')
         prev_summary = summary
         response_summaries.append(summary)
-        final_summary = summary
 
-    all_summaries = "\n\n".join(response_summaries)
-
-    return final_summary
+    return prev_summary
 
 
-def generate_final_output(responses):
-    prompt = f""" You have been provided with multiple summaries that discuss various aspects of data collection, 
-    use, sharing, retention, security, and related concerns. Your task is to synthesize these individual summaries 
-    into a single, cohesive summary under the following distinct categories. Ensure that the final summary retains 
-    clarity, coherence, and highlights the key points in a way that flows logically.
-
-    ----
-    {responses}
-    """
-
-    completion = call_llamafile(prompt)
-
-    final_summary = completion.choices[0].message.content.strip()
-    final_summary = final_summary.rstrip('</s>')
-
-    return final_summary
-
-
-# --- Function Calls --- #
+# --- MAIN METHOD --- #
 
 text = read_file('../../MetaPrivacyPolicy.txt')
-print("completed step 1")
 chunks_dict = parse_file_into_chunks(text)
-print("completed step 2")
 
 # printing out to console for testing purposes
 # for key, value in chunks.items():
@@ -159,5 +133,5 @@ print("completed step 2")
 
 # print("Finished parsing chunks")
 
-output = generate_summaries(chunks_dict)
+output = generate_summary(chunks_dict)
 print(output)
