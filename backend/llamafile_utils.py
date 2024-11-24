@@ -122,16 +122,9 @@ def generate_summary(prompt_chunks):
     return prev_summary
 
 
-# --- MAIN METHOD --- #
+def main_llamafile_call(file_path):
+    text = read_file('../../MetaPrivacyPolicy.txt')
+    chunks_dict = parse_file_into_chunks(text)
 
-text = read_file('../../MetaPrivacyPolicy.txt')
-chunks_dict = parse_file_into_chunks(text)
-
-# printing out to console for testing purposes
-# for key, value in chunks.items():
-# print(f"Chunk {key}: {value}\n")
-
-# print("Finished parsing chunks")
-
-output = generate_summary(chunks_dict)
-print(output)
+    output = generate_summary(chunks_dict)
+    print(output)
