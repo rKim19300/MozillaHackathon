@@ -10,4 +10,8 @@ For this Hackathon, we were challenged to build an AI solution using Mozilla's L
 
 ### Backend
 
-- To run the backend, first step into the backend directory then type <code>pip install -r ./requirments.txt</code> and then <code>python main.py</code>
+To run the backend:
+
+- First, step into the backend directory with <code>cd backend</code>
+- Then, type <code>pip install -r ./requirments.txt</code> into the terminal and press enter
+- Then, run <code>python main.py</code>
