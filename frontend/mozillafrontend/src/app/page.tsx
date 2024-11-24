@@ -14,9 +14,68 @@ const HomePage = () => {
 
   const [ summary, setSummary ] = useState("");
 
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [filePreview, setFilePreview] = useState<string | null>(null);
+  
+  const [url, setUrl] = useState<string>("");
+  const [uploadStatus, setUploadStatus] = useState<string>("");
+
+
+
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
+
+  // Handle URL input change
+  const handleUrlChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setUrl(event.target.value);
+    setUploadStatus(""); // Clear previous status when URL changes
+  };
+
+  // Handle file selection and generate a preview
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      const file = event.target.files[0];
+      setSelectedFile(file);
+
+      // Generate a preview for PDF or text files
+      if (file.type === "application/pdf") {
+        const fileURL = URL.createObjectURL(file);
+        setFilePreview(fileURL); // Set URL for preview
+      } else if (file.type === "text/plain") {
+        const reader = new FileReader();
+        reader.onload = () => {
+          setFilePreview(reader.result as string); // Set text content for preview
+        };
+        reader.readAsText(file);
+      } else {
+        setFilePreview(null); // Clear preview for unsupported types
+      }
+    }
+  };
+
+  // Upload file and send to backend
+  const sendFile = async () => {
+    if (!selectedFile) {
+      alert("Please select a file before uploading.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", selectedFile);
+
+    try {
+      setSummary(""); // Reset summary
+      const response = await axiosInstance.post("/api/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      console.log("File uploaded successfully:", response.data);
+    } catch (error) {
+      console.error("Error uploading file:", error);
+    }
+  };  
 
   // Query the terms of service
   const sendTerms = async () => {
@@ -43,6 +102,40 @@ const HomePage = () => {
           <p className="text-xl">Please upload a Privacy Policy pdf or txt file that you would like summarized.</p>
           { /* TODO Make a text box that takes in the UI along with its own separate button */ }
           { /* TODO Make form that holds the pdf */ }
+          <input 
+            type="file" 
+            accept=".pdf,.txt" 
+            onChange={handleFileChange}
+            className="mt-4"
+          />
+
+          {/* URL input */}
+          <input
+            type="text"
+            placeholder="Enter a URL"
+            value={url}
+            onChange={handleUrlChange}
+            className="mt-4 p-2 border rounded-lg w-full"
+          />
+
+          {/* Preview area */}
+          <div className="mt-4 border p-4 rounded-lg bg-gray-50">
+            {filePreview ? (
+              selectedFile?.type === "application/pdf" ? (
+                <iframe
+                  src={filePreview}
+                  title="PDF Preview"
+                  className="w-full h-96 border rounded-lg"
+                ></iframe>
+              ) : (
+                <pre className="text-left whitespace-pre-wrap">
+                  {filePreview}
+                </pre>
+              )
+            ) : (
+              <p>No preview available.</p>
+            )}
+          </div>
           <button 
             className="mt-4 p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700" 
             onClick={() => sendTerms()}
