@@ -45,7 +45,7 @@ const HomePage = () => {
   
   // Handle URL input change
   const handleUrlChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setUrl(event.target.value);
+    setUrl(event.target.value || "");
     setUploadStatus(""); // Clear previous status when URL changes
   };
 
@@ -74,7 +74,7 @@ const HomePage = () => {
   };
 
   // Upload file and send to backend
-  const sendData = async () => {
+  const sendPdf = async () => {
     if (!selectedFile) {
       alert("Please select a file before uploading.");
       return;
@@ -87,43 +87,41 @@ const HomePage = () => {
       setSummary(""); // Reset summary
 
       // Send in file 
-      let response;
-      if (isFileMode) {
-        response = await axiosInstance.post("/api/summarize/pdf", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
-      }
-      else {
-        response = await axiosInstance.post("api/summarize/url", { url: url })
-      }
+      const response = await axiosInstance.post("/api/summarize/pdf", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+    
       console.log("Uploaded successfully:", response.data);
     } catch (error) {
       console.error("Error uploading file:", error);
     }
   };  
 
-  const sendPdf = async (pdf: FormData) => {
+  const sendUrl = async () => {
 
-    // TODO convert the pdf into a byte stream
+    if (!url) {
+      alert("Please enter a url before upload.");
+      return;
+    }
 
-    setSummary("");
-    await axiosInstance.post("/api/summarize/pdf", { pdf_stream: ""});
-  }
+    try {
+      setSummary(""); // Reset summary
 
-  const sendUrl = async (url: string) => {
-
-    // TODO convert the pdf into a byte stream
-
-    setSummary("");
-    await axiosInstance.post("/api/summarize/pdf", { url: url});
+      // Send in file 
+      const response = await axiosInstance.post("/api/summarize/url", { url: url});
+    
+      console.log("Uploaded successfully:", response.data);
+    } catch (error) {
+      console.error("Error uploading file:", error);
+    }
   }
 
   // The socket for constant updating
   useEffect(() => {
     socket.on('update-summary', (data) => {
-      setSummary((prevSummary) => prevSummary + data.chunk.replace("</s>", " "))
+      setSummary((prevSummary) => prevSummary + data.chunk.replace("</s>", " "));
     });
 
     return () => { socket.off('update-summary'); };
@@ -181,10 +179,9 @@ const HomePage = () => {
           )}
           { /* TODO Make a text box that takes in the UI along with its own separate button */ }
           { /* TODO Make form that holds the pdf */ }
-          
           <button 
             className="mt-4 p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700" 
-            onClick={() => sendData()}
+            onClick={() => (isFileMode) ? sendPdf() : sendUrl()}
             >
             Upload
           </button>

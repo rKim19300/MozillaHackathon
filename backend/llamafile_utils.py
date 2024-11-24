@@ -72,7 +72,7 @@ def call_llamafile(prompt):
             {"role": "user", "content": f"{prompt}"}
         ]
     )
-
+    print(completion)
     return completion
 
 
@@ -119,6 +119,42 @@ def generate_summary(prompt_chunks):
 
     # prev_summary will also hold our final summary at the end of the loop
     return prev_summary
+
+
+def get_chunks(parsed_text_dict):
+    text = read_dict(parsed_text_dict)
+    chunks_dict = parse_file_into_chunks(text)
+    return chunks_dict
+
+def process_chunk(chunk):
+    prompt = f"""Please read the following privacy policy or terms of service and summarize the key points 
+    regarding the collection, use, and sharing of consumer data. Focus on the following categories:
+
+    1. **Types of Data Collected**: What types of data are being collected?
+    2. **Purpose of Data Usage**: How is the data being used?
+    3. **Data Sharing**: Who is the data being shared with?
+    4. **Data Retention and Deletion**: How long is the data retained and under what conditions is it deleted or anonymized?
+    5. **Consumer Rights and Control**: What rights or control are given to consumers over their data?
+    6. **Data Security Measures**: What security measures are in place to protect consumer data?
+    7. **Risks and Concerns**: Are there any potential risks or concerns related to data privacy or data sharing?
+
+    Provide a concise **bullet-point summary** highlighting these key aspects for each category. Be sure to **use 
+    bullet points** for each point in your summary.
+
+    You **do not need to include** the example below in your response. It is just to show the expected format:
+    
+    Example format (not to be included in the output):
+    - Key point 1
+    - Key point 2
+
+    Now, please generate the bullet-point summary based on the provided text below:
+    
+    {chunk}
+    """
+
+    prompt2 = "Tell me a joke"
+
+    return call_llamafile(prompt2)
 
 
 def main_llamafile_call(parsed_text_dict):

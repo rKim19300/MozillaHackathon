@@ -52,7 +52,7 @@ def extract_pdf_sections(pdf_byte_stream) -> dict[str, str]:
     terms_of_service = {}
 
     # Read the PDF
-    reader = PdfReader(BytesIO(pdf_byte_stream.read()))
+    reader = PdfReader(pdf_byte_stream)
     full_text = ""
     for page in reader.pages:
         full_text += page.extract_text() + "\n"
