@@ -41,6 +41,8 @@ const HomePage = () => {
         <div className="text-center p-4 bg-white rounded-lg shadow-md">
           <h1 className="text-4xl font-bold text-zinc-500">Privacy Policies Simplified</h1>
           <p className="text-xl">Please upload a Privacy Policy pdf or txt file that you would like summarized.</p>
+          { /* TODO Make a text box that takes in the UI along with its own separate button */ }
+          { /* TODO Make form that holds the pdf */ }
           <button 
             className="mt-4 p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700" 
             onClick={() => sendTerms()}

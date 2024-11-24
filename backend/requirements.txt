@@ -1,0 +1,13 @@
+pdfreader
+beautifulsoup4
+requests
+PyPDF2
+regex
+langchain-community
+langchain
+langchain-core
+Flask-Cors
+Flask-SocketIO
+Flask
+
+
