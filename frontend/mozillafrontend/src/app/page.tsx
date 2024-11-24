@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Navbar from '/src/app/components/Navbar';
+import Navbar from './components/Navbar';
 import axiosInstance from '../axiosInstance.js';
 
 import io from "socket.io-client";
@@ -20,12 +20,22 @@ const HomePage = () => {
   const [url, setUrl] = useState<string>("");
   const [uploadStatus, setUploadStatus] = useState<string>("");
 
+  const [isFileMode, setIsFileMode] = useState<boolean>(true); // Toggle between File and URL modes
 
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  // Toggle between file and URL submission modes
+  const toggleMode = () => {
+    setIsFileMode((prevMode) => !prevMode);
+    setUploadStatus(""); // Reset upload status when switching modes
+    setSelectedFile(null);
+    setUrl("");
+  };
+
+  
   // Handle URL input change
   const handleUrlChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUrl(event.target.value);
@@ -100,42 +110,52 @@ const HomePage = () => {
         <div className="text-center p-4 bg-white rounded-lg shadow-md">
           <h1 className="text-4xl font-bold text-zinc-500">Privacy Policies Simplified</h1>
           <p className="text-xl">Please upload a Privacy Policy pdf or txt file that you would like summarized.</p>
+          {/* Toggle Mode Button */}
+          <button 
+            className="mt-4 p-2 bg-purple-500 text-white rounded-lg hover:bg-purple-700"
+            onClick={toggleMode}
+          >
+            Switch to {isFileMode ? "URL Submission" : "File Upload"}
+          </button>
+
+          {isFileMode ? (
+            // File Upload Mode
+            <div className="mt-4">
+              <input 
+                type="file" 
+                accept=".pdf,.txt" 
+                onChange={handleFileChange}
+                className="mt-4"
+              />
+              {filePreview && (
+                <div className="mt-4 border p-4 rounded-lg bg-gray-50">
+                  {selectedFile?.type === "application/pdf" ? (
+                    <iframe
+                      src={filePreview}
+                      title="PDF Preview"
+                      className="w-full h-96 border rounded-lg"
+                    ></iframe>
+                  ) : (
+                    <pre className="text-left whitespace-pre-wrap">{filePreview}</pre>
+                  )}
+                </div>
+              )}
+            </div>
+          ) : (
+            // URL Submission Mode
+            <div className="mt-4">
+              <input
+                type="text"
+                placeholder="Enter a URL"
+                value={url}
+                onChange={handleUrlChange}
+                className="mt-4 p-2 border rounded-lg w-full"
+              />
+            </div>
+          )}
           { /* TODO Make a text box that takes in the UI along with its own separate button */ }
           { /* TODO Make form that holds the pdf */ }
-          <input 
-            type="file" 
-            accept=".pdf,.txt" 
-            onChange={handleFileChange}
-            className="mt-4"
-          />
-
-          {/* URL input */}
-          <input
-            type="text"
-            placeholder="Enter a URL"
-            value={url}
-            onChange={handleUrlChange}
-            className="mt-4 p-2 border rounded-lg w-full"
-          />
-
-          {/* Preview area */}
-          <div className="mt-4 border p-4 rounded-lg bg-gray-50">
-            {filePreview ? (
-              selectedFile?.type === "application/pdf" ? (
-                <iframe
-                  src={filePreview}
-                  title="PDF Preview"
-                  className="w-full h-96 border rounded-lg"
-                ></iframe>
-              ) : (
-                <pre className="text-left whitespace-pre-wrap">
-                  {filePreview}
-                </pre>
-              )
-            ) : (
-              <p>No preview available.</p>
-            )}
-          </div>
+          
           <button 
             className="mt-4 p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700" 
             onClick={() => sendTerms()}
