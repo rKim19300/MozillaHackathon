@@ -28,10 +28,16 @@ Our solution leverages Mozilla's Llamafile AI technology to empower users to mak
 1. Navigate to the frontend directory
 
 ```
-cd frontend
+cd frontend/mozillafrontend
 ```
 
-2. Download Llamafile:
+2. Install Necessary Dependencies
+
+```
+npm install
+```
+
+3. Download Llamafile:
 
 - Run the following command to set up Llamafile in the project:
 
@@ -39,7 +45,7 @@ cd frontend
 npm run setup
 ```
 
-3. Start the Project
+4. Start the Project
 
 - To start the project, type the following in the terminal:
 

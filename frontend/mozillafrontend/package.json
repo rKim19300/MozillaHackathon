@@ -14,6 +14,7 @@
     "setup:unix:llamafileexe": "chmod +x ./llamafile/TinyLlama-1.1B-Chat-v1.0.F16.llamafile"
   },
   "dependencies": {
+    "@heroicons/react": "^2.2.0",
     "axios": "^1.7.7",
     "next": "^15.0.3",
     "react": "^18.3.1",
