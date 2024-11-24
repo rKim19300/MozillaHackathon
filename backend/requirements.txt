@@ -3,6 +3,7 @@ beautifulsoup4
 requests
 PyPDF2
 regex
+openai
 langchain-community
 langchain
 langchain-core
