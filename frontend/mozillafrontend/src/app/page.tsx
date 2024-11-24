@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import Navbar from './components/Navbar';
-import axiosInstance from '../axiosInstance.js';
+import React, { useState, useEffect } from "react";
+import Navbar from "./components/Navbar";
+import axiosInstance from "../axiosInstance.js";
 
 import io from "socket.io-client";
 
@@ -12,28 +12,37 @@ const socket = io("http://localhost:5000");
 const HomePage = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const [ summary, setSummary ] = useState("");
+  const [summary, setSummary] = useState("");
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [filePreview, setFilePreview] = useState<string | null>(null);
-  
+
   const [url, setUrl] = useState<string>("");
   const [uploadStatus, setUploadStatus] = useState<string>("");
 
   const [isFileMode, setIsFileMode] = useState<boolean>(true); // Toggle between File and URL modes
 
-
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-   // Toggle between file and URL submission modes
-   const toggleMode = () => {
+  // Function to convert newlines to <br /> tags
+  const convertNewlinesToBr = (text: string) => {
+    return text.split('\n').map((line, index) => (
+      <>
+        {line}
+        {index < text.split('\n').length - 1 && <br />}
+      </>
+    ));
+  };
+  
+  // Toggle between file and URL submission modes
+  const toggleMode = () => {
     // Release the Blob URL before switching modes
     if (filePreview) {
       URL.revokeObjectURL(filePreview); // Cleanup Blob URL when switching modes
     }
-    
+
     // Reset states and switch mode
     setIsFileMode((prevMode) => !prevMode);
     setUploadStatus(""); // Reset upload status when switching modes
@@ -42,7 +51,6 @@ const HomePage = () => {
     setFilePreview(null); // Clear file preview
   };
 
-  
   // Handle URL input change
   const handleUrlChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUrl(event.target.value || "");
@@ -97,7 +105,7 @@ const HomePage = () => {
     } catch (error) {
       console.error("Error uploading file:", error);
     }
-  };  
+  };
 
   const sendUrl = async () => {
 
@@ -120,11 +128,15 @@ const HomePage = () => {
 
   // The socket for constant updating
   useEffect(() => {
-    socket.on('update-summary', (data) => {
-      setSummary((prevSummary) => prevSummary + data.chunk.replace("</s>", " "));
+    socket.on("update-summary", (data) => {
+      setSummary(
+        (prevSummary) => prevSummary + data.chunk.replace("</s>", " ")
+      );
     });
 
-    return () => { socket.off('update-summary'); };
+    return () => {
+      socket.off("update-summary");
+    };
   }, []);
 
   return (
@@ -132,10 +144,17 @@ const HomePage = () => {
       <Navbar />
       <div className="pt-20 min-h-screen flex items-center justify-center bg-gray-100">
         <div className="text-center p-4 bg-white rounded-lg shadow-md">
-          <h1 className="text-4xl font-bold text-indigo-500">Privacy Policies Simplified</h1>
-          <p className="text-m">Please upload a Privacy Policy pdf or txt file that you would like summarized.</p>
+          <h1 className="text-4xl font-bold text-indigo-500">
+            Privacy Policies Simplified
+          </h1>
+          <br />
+          <p className="text-m">
+            Please upload a Terms of Service Agreement or Privacy Policy pdf
+            file or URL that you would like summarized.
+          </p>
+          <br />
           {/* Toggle Mode Button */}
-          <button 
+          <button
             className="mt-4 p-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-300"
             onClick={toggleMode}
           >
@@ -145,9 +164,9 @@ const HomePage = () => {
           {isFileMode ? (
             // File Upload Mode
             <div className="mt-4">
-              <input 
-                type="file" 
-                accept=".pdf,.txt" 
+              <input
+                type="file"
+                accept=".pdf,.txt"
                 onChange={handleFileChange}
                 className="mt-4"
               />
@@ -160,7 +179,9 @@ const HomePage = () => {
                       className="w-full h-96 border rounded-lg"
                     ></iframe>
                   ) : (
-                    <pre className="text-left whitespace-pre-wrap">{filePreview}</pre>
+                    <pre className="text-left whitespace-pre-wrap">
+                      {filePreview}
+                    </pre>
                   )}
                 </div>
               )}
@@ -185,8 +206,13 @@ const HomePage = () => {
             >
             Upload
           </button>
-          { /* TODO Re-format summary, it has newlines in it, which don't render on the page */ }
-          <p>{ summary }</p>
+          {/* TODO Re-format summary, it has newlines in it, which don't render on the page */}
+          {summary && (
+            <div
+              className="mt-4 p-4 bg-gray-100 rounded-lg"
+              dangerouslySetInnerHTML={{ __html: convertNewlinesToBr(summary) }}
+            />
+          )}
         </div>
       </div>
     </div>
