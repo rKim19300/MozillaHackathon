@@ -26,6 +26,16 @@ const HomePage = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  // Function to convert newlines to <br /> tags
+  const convertNewlinesToBr = (text: string) => {
+    return text.split('\n').map((line, index) => (
+      <>
+        {line}
+        {index < text.split('\n').length - 1 && <br />}
+      </>
+    ));
+  };
+  
   // Toggle between file and URL submission modes
   const toggleMode = () => {
     // Release the Blob URL before switching modes
@@ -198,7 +208,12 @@ const HomePage = () => {
             Upload
           </button>
           {/* TODO Re-format summary, it has newlines in it, which don't render on the page */}
-          <p>{summary}</p>
+          {summary && (
+            <div
+              className="mt-4 p-4 bg-gray-100 rounded-lg"
+              dangerouslySetInnerHTML={{ __html: convertNewlinesToBr(summary) }}
+            />
+          )}
         </div>
       </div>
     </div>
