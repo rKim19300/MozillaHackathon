@@ -21,15 +21,41 @@ print("Running llamafile")
     API routes
 """
 
-@app.route("/api/summarize", methods=['POST'])
-def summarize():
+@app.route("/api/summarize/url", methods=['POST'])
+def summarize_url():
 
-    data = request.get_json()  # Parse the JSON body
-    terms = data.get('terms') 
+    data = request.get_json()    # Parse the JSON body
+    url = data.get('url')
+
+    content = parse_webpage(url) # Parse the webpage into a dict <title, section-content>
 
     # Send the query to the background to be processed
-    # TODO replace this query with the one we intend
-    query = "Write a 3 line Haiku \n" + terms
+    # TODO Instead of passing in the query, we can pass in the content
+    query = "Write a 3 line Haiku \n" + url
+    socketio.start_background_task(target=stream_chunks, query=query)
+
+    # Send a response back
+    headers = {"Content-Type" : "application/json"}
+
+    response = make_response("Success", 200)
+    response.headers.update(headers)
+
+    return response
+
+
+@app.route("/api/summarize/pdf", methods=['POST'])
+def summarize_pdf():
+
+    uploaded_file = request.files.get('file')
+
+    content = extract_pdf_sections(uploaded_file) # Pass in the pdf stream to be parsed
+
+    # TODO fix it so the pdf scraper works
+    print(content)
+
+    # Send the query to the background to be processed
+    # TODO Instead of passing in the query, we can pass in the content
+    query = "Write a 3 line Haiku \n" 
     socketio.start_background_task(target=stream_chunks, query=query)
 
     # Send a response back

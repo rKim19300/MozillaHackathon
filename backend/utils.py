@@ -46,17 +46,13 @@ def extract_pdf_sections(pdf_byte_stream) -> dict[str, str]:
     Extracts the section of the pdf, which contains the TOS
 
     :param pdf_byte_stream: A pdf file represented as a byte stream.
-
-
     """
     
-    pdf_file = BytesIO(pdf_byte_stream)
-
     # Initialize a dictionary to store sections
     terms_of_service = {}
 
     # Read the PDF
-    reader = PdfReader(pdf_file)
+    reader = PdfReader(BytesIO(pdf_byte_stream.read()))
     full_text = ""
     for page in reader.pages:
         full_text += page.extract_text() + "\n"

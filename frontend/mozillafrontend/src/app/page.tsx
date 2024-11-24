@@ -20,6 +20,7 @@ const HomePage = () => {
   const [url, setUrl] = useState<string>("");
   const [uploadStatus, setUploadStatus] = useState<string>("");
 
+  const [ isFileMode, setIsFileMode ] = useState<boolean>(true);
 
 
   const toggleMobileMenu = () => {
@@ -55,7 +56,7 @@ const HomePage = () => {
   };
 
   // Upload file and send to backend
-  const sendFile = async () => {
+  const sendData = async () => {
     if (!selectedFile) {
       alert("Please select a file before uploading.");
       return;
@@ -66,23 +67,40 @@ const HomePage = () => {
 
     try {
       setSummary(""); // Reset summary
-      const response = await axiosInstance.post("/api/upload", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      console.log("File uploaded successfully:", response.data);
+
+      // Send in file 
+      let response;
+      if (isFileMode) {
+        response = await axiosInstance.post("/api/summarize/pdf", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+      }
+      else {
+        response = await axiosInstance.post("api/summarize/url", { url: url })
+      }
+      console.log("Uploaded successfully:", response.data);
     } catch (error) {
       console.error("Error uploading file:", error);
     }
   };  
 
-  // Query the terms of service
-  const sendTerms = async () => {
+  const sendPdf = async (pdf: FormData) => {
+
+    // TODO convert the pdf into a byte stream
+
     setSummary("");
-    // TODO replace the terms with a file
-    await axiosInstance.post("/api/summarize", { terms: "terms"});
-  };
+    await axiosInstance.post("/api/summarize/pdf", { pdf_stream: ""});
+  }
+
+  const sendUrl = async (url: string) => {
+
+    // TODO convert the pdf into a byte stream
+
+    setSummary("");
+    await axiosInstance.post("/api/summarize/pdf", { url: url});
+  }
 
   // The socket for constant updating
   useEffect(() => {
@@ -138,7 +156,7 @@ const HomePage = () => {
           </div>
           <button 
             className="mt-4 p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700" 
-            onClick={() => sendTerms()}
+            onClick={() => sendData()}
             >
             Upload
           </button>
