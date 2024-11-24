@@ -80,38 +80,32 @@ def call_llamafile(prompt):
 def generate_summaries(prompt_chunks):
     response_summaries = []
     prev_summary = ""
+    final_summary = ""
 
     # will only iterate through 4*chunk_size for suitable runtime
     for prompt_chunk_index, prompt_chunk_text in list(prompt_chunks.items())[:4]:
-        prompt = f""" Please read the following privacy policy or terms of service and summarize the key points and 
-        concerns regarding the collection, use, and sharing of consumer data. Specifically, focus on the following 
-        categories:
 
-        1. Types of Data Collected: What types of data are being collected?
+        prompt = f"""Please read the following privacy policy or terms of service and summarize the key points 
+        regarding the collection, use, and sharing of consumer data. Focus on the following categories:
 
-        2. Purpose of Data Usage: How is the data being used?
-
-        3. Data Sharing: Who is the data being shared with?
-
-        4. Data Retention and Deletion: How long is the data retained and under what conditions is it deleted or anonymized?
-
-        5. Consumer Rights and Control: What rights or control are given to consumers over their data?
-
-        6. Data Security Measures: What security measures are in place to protect consumer data?
-
-        7. Risks and Concerns: Are there any potential risks or concerns related to data privacy or data sharing?
+        1. **Types of Data Collected**: What types of data are being collected?
+        2. **Purpose of Data Usage**: How is the data being used?
+        3. **Data Sharing**: Who is the data being shared with?
+        4. **Data Retention and Deletion**: How long is the data retained and under what conditions is it deleted or anonymized?
+        5. **Consumer Rights and Control**: What rights or control are given to consumers over their data?
+        6. **Data Security Measures**: What security measures are in place to protect consumer data?
+        7. **Risks and Concerns**: Are there any potential risks or concerns related to data privacy or data sharing?
 
         Provide a concise **bullet-point summary** highlighting these key aspects for each category. Be sure to **use 
         bullet points** for each point in your summary.
 
         You **do not need to include** the example below in your response. It is just to show the expected format:
-
+        
         Example format (not to be included in the output):
-        - Point 1
-        - Point 2
-        - Point 3
+        - Key point 1
+        - Key point 2
 
-        Now, please generate the bullet-point summary based on the text provided below:
+        Now, please generate the bullet-point summary based on the provided text below:
 
         {prev_summary}
 
@@ -121,12 +115,17 @@ def generate_summaries(prompt_chunks):
 
         completion = call_llamafile(prompt)
 
+        # completion.choices[0].text.strip()
+        # completion.choices[0].message.content
         summary = completion.choices[0].message.content.strip()
         summary = summary.rstrip('</s>')
         prev_summary = summary
         response_summaries.append(summary)
+        final_summary = summary
 
-    return prev_summary
+    all_summaries = "\n\n".join(response_summaries)
+
+    return final_summary
 
 
 def generate_final_output(responses):
@@ -147,7 +146,7 @@ def generate_final_output(responses):
     return final_summary
 
 
-# --- MAIN METHOD --- #
+# --- Function Calls --- #
 
 text = read_file('../../MetaPrivacyPolicy.txt')
 print("completed step 1")
