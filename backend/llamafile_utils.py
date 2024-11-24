@@ -1,5 +1,4 @@
 from openai import OpenAI
-import re
 
 client = OpenAI(
     base_url="http://localhost:8080/v1",  # Run your llamafile first, this is the port that it's running on
@@ -10,11 +9,12 @@ client = OpenAI(
 max_safe_chunk_size = 2700
 
 
-def read_file(path_to_file):
-    with open(f'{path_to_file}', 'r') as file:
-        content = file.readlines()
-    file.close()
-    return ''.join(content)
+def read_dict(dictionary):
+    text_to_return = []
+    for header, text in dictionary.items():
+        combined = f"{header}: {text}"
+        text_to_return.append(combined)
+    return "\n".join(text_to_return)
 
 
 def parse_file_into_chunks(file_text):
@@ -81,7 +81,7 @@ def generate_summary(prompt_chunks):
     prev_summary = ""
 
     # will only iterate through 4*chunk_size for suitable runtime
-    for prompt_chunk_index, prompt_chunk_text in list(prompt_chunks.items())[:4]:
+    for prompt_chunk_text in list(prompt_chunks.items())[:4]:
         prompt = f"""Please read the following privacy policy or terms of service and summarize the key points 
         regarding the collection, use, and sharing of consumer data. Focus on the following categories:
 
@@ -112,8 +112,6 @@ def generate_summary(prompt_chunks):
 
         completion = call_llamafile(prompt)
 
-        # completion.choices[0].text.strip()
-        # completion.choices[0].message.content
         summary = completion.choices[0].message.content.strip()
         summary = summary.rstrip('</s>')
         prev_summary = summary
@@ -122,9 +120,8 @@ def generate_summary(prompt_chunks):
     return prev_summary
 
 
-def main_llamafile_call(file_path):
-    text = read_file('../../MetaPrivacyPolicy.txt')
+def main_llamafile_call(parsed_text_dict):
+    text = read_dict(parsed_text_dict)
     chunks_dict = parse_file_into_chunks(text)
-
     output = generate_summary(chunks_dict)
-    print(output)
+    return output
