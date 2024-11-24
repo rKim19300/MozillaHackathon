@@ -5,8 +5,12 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "lint": "next lint",
     "start": "next start",
-    "lint": "next lint"
+    "start:unix:llamafile": "llamafile/TinyLlama-1.1B-Chat-v1.0.F16.llamafile -ngl 9999 --embedding --server --nobrowser --port 8887",
+    "setup": "npm-run-all setup:unix:llamafile setup:unix:llamafileexe",
+        "setup:unix:llamafile": "curl --no-clobber -L -o llamafile/TinyLlama-1.1B-Chat-v1.0.F16.llamafile https://huggingface.co/Mozilla/TinyLlama-1.1B-Chat-v1.0-llamafile/resolve/main/TinyLlama-1.1B-Chat-v1.0.Q4_0.llamafile?download=true",
+        "setup:unix:llamafileexe": "chmod +x llamafile/TinyLlama-1.1B-Chat-v1.0.F16.llamafile"
   },
   "dependencies": {
     "axios": "^1.7.7",

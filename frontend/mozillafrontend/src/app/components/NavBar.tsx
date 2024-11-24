@@ -12,7 +12,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 w-full flex items-center justify-between flex-wrap bg-zinc-900 p-6 shadow-lg z-10">
+    <nav className="fixed top-0 left-0 w-full flex items-center justify-between flex-wrap bg-indigo-900 p-6 shadow-lg z-10">
       <div className="flex items-center flex-shrink-0 text-white mr-6">
         <span className="font-semibold text-xl tracking-tight">Mozilla Hackathon</span>
       </div>
