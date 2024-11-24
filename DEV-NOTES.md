@@ -19,10 +19,10 @@
 
 3. Update the prompt so that it only its summary only outputs a limited number of words per section <span style="color: red;">***(MJ)***</span>
 
-4. Try using the ***AnalyzeDocumentChain*** from langchain.chain when querying the LLM.  This will map reduce the input and enhance the output. We can apply it to one section of the TOS at a time <span style="color: red;">***(MJ)***</span>
+4. (Edit: try using what you have in llamafileConnection.py, then try this) Try using the ***AnalyzeDocumentChain*** from langchain.chain when querying the LLM.  This will map reduce the input and enhance the output. We can apply it to one section of the TOS at a time <span style="color: red;">***(MJ)***</span>
     - Make a function similar to stream_chunks() in main.py, which will be fed the dictionary from part 2.
     - Feed it one section of the TOS at a time (from the dictionary).
-    - If this is too slow, perhaps try the original idea
+    - If this is too slow, perhaps scrap it
 
 5. Format the output in the frontend <span style="color: green;">***(JW)***</span>
     - The stream that is returned has \n characters, convert them into the equivalent React/HTML versions
