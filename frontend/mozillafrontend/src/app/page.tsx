@@ -22,6 +22,10 @@ const HomePage = () => {
 
   const [isFileMode, setIsFileMode] = useState<boolean>(true); // Toggle between File and URL modes
 
+  function replaceNewLines() {
+    return summary.replace(/\n/g, "<br />")
+  }
+
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
@@ -130,8 +134,9 @@ const HomePage = () => {
   useEffect(() => {
     socket.on("update-summary", (data) => {
       setSummary(
-        (prevSummary) => prevSummary + data.chunk.replace("</s>", " ")
+        (prevSummary) => prevSummary + data.token.replace("</s>", " ")
       );
+      console.log(summary);
     });
 
     return () => {
@@ -140,7 +145,7 @@ const HomePage = () => {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100">
+    <div className="min-h-screen flex flex-col bg-gray-100 text-black">
       <Navbar />
       <div className="pt-20 min-h-screen flex items-center justify-center bg-gray-100">
         <div className="text-center p-4 bg-white rounded-lg shadow-md">
@@ -148,7 +153,7 @@ const HomePage = () => {
             Privacy Policies Simplified
           </h1>
           <br />
-          <p className="text-m">
+          <p className="text-black">
             Please upload a Terms of Service Agreement or Privacy Policy pdf
             file or URL that you would like summarized.
           </p>
@@ -207,12 +212,9 @@ const HomePage = () => {
             Upload
           </button>
           {/* TODO Re-format summary, it has newlines in it, which don't render on the page */}
-          {summary && (
-            <div
-              className="mt-4 p-4 bg-gray-100 rounded-lg"
-              dangerouslySetInnerHTML={{ __html: convertNewlinesToBr(summary) }}
-            />
-          )}
+          <div style={{ color: 'black' }}>
+          <p style={{ textAlign: 'left' }} dangerouslySetInnerHTML={{ __html: replaceNewLines()}} />
+          </div>
         </div>
       </div>
     </div>

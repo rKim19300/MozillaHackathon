@@ -7,8 +7,10 @@ openai
 langchain-community
 langchain
 langchain-core
+langchain-huggingface
 Flask-Cors
 Flask-SocketIO
 Flask
-
+sqlite3
+sqlite_vec
 
