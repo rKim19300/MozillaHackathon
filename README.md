@@ -14,12 +14,17 @@ Our solution leverages Mozilla's Llamafile AI technology to empower users to mak
 2. **Highlighting Concerns**: Llamafile doesn’t just summarize the text—it also analyzes the content for potentially concerning or harmful practices. This allows users to quickly identify privacy risks and make informed decisions about their online activities, knowing exactly what they’re agreeing to.
 3. **User-Friendly Interface**: Our platform presents the summarized document in a format that’s easy for the user to understand.
 
+### RAG Pipeline
+
+![alt text](diagram/SafeScanRAG.png)
+
 ### Technology Stack
 
 - Next.js (Frontend)
-- Flask (Backend)
+- Flask and Socket.io (Backend)
 - Beautiful Soup (Web Scraping)
 - Mozilla's Llamafile (AI Engine)
+- Langchain (LLM Orchestration)
 
 ## Set Up and Installation Instructions
 

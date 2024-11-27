@@ -41,7 +41,7 @@ const DocsPage = () => {
             (Frontend)
           </li>
           <li>
-            <strong className="mt-2 text-lg text-zinc-600">Flask</strong>{" "}
+            <strong className="mt-2 text-lg text-zinc-600">Flask and Socket.io</strong>{" "}
             (Backend)
           </li>
           <li>
@@ -55,6 +55,12 @@ const DocsPage = () => {
               Mozilla's Llamafile
             </strong>{" "}
             (AI Engine)
+          </li>
+          <li>
+            <strong className="mt-2 text-lg text-zinc-600">
+              Langchain
+            </strong>{" "}
+            (LLM Orchestration)
           </li>
         </ul>
       </main>
