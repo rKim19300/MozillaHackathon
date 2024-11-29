@@ -41,8 +41,14 @@ const DocsPage = () => {
             (Frontend)
           </li>
           <li>
-            <strong className="mt-2 text-lg text-zinc-600">Flask and Socket.io</strong>{" "}
+            <strong className="mt-2 text-lg text-zinc-600">Flask w/ Socket.io</strong>{" "}
             (Backend)
+          </li>
+          <li>
+            <strong className="mt-2 text-lg text-zinc-600">
+              Sqlite-vec
+            </strong>{" "}
+            (vector database)
           </li>
           <li>
             <strong className="mt-2 text-lg text-zinc-600">

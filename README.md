@@ -21,7 +21,8 @@ Our solution leverages Mozilla's Llamafile AI technology to empower users to mak
 ### Technology Stack
 
 - Next.js (Frontend)
-- Flask and Socket.io (Backend)
+- Flask w/ Socket.io (Backend)
+- Sqlite-vec (vector database)
 - Beautiful Soup (Web Scraping)
 - Mozilla's Llamafile (AI Engine)
 - Langchain (LLM Orchestration)
