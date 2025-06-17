@@ -59,6 +59,14 @@ npm install
 npm run setup
 ```
 
+- Alternatively navigate to where the llamafile is located a run the command:
+
+```
+./<llamafile-name> --gpu nvidia --port 8080
+```
+
+- Use ``` --gpu amd ``` if you have a AMD gpu, or remove this flag if you only have a CPU. 
+
 4. Start the Project
 
 - To start the project, type the following in the terminal:
