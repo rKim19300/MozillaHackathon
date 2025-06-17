@@ -1,5 +1,9 @@
 # Mozilla's Next Generation AI Developers Hackathon
 
+## Demo
+
+<video src="./SafeScan-Demo-mp4.mp4" width="320" height="240" controls></video>
+
 ## Description
 
 For this Hackathon, we were challenged to build an AI solution using Mozilla's Llamafile to protect users personal activities and information online.
