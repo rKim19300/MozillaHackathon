@@ -2,7 +2,11 @@
 
 ## Demo
 
-<video src="./SafeScan-Demo-mp4.mp4" width="320" height="240" controls></video>
+
+
+https://github.com/user-attachments/assets/f7e5bcfb-ab13-4a46-8217-793678cd04c3
+
+
 
 ## Description
 
